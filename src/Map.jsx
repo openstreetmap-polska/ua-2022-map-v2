@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap, Marker } from 'react-leaflet';
 import L from "leaflet";
 
 const position = [51.505, -0.09];
 
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
+
 function LocationMarker() {
   const [position, setPosition] = useState(null);
-  const [bbox, setBbox] = useState([]);
 
   const map = useMap();
 
@@ -14,10 +21,6 @@ function LocationMarker() {
     map.locate().on("locationfound", function (e) {
       setPosition(e.latlng);
       map.flyTo(e.latlng, map.getZoom());
-      const radius = e.accuracy;
-      const circle = L.circle(e.latlng, radius);
-      circle.addTo(map);
-      setBbox(e.bounds.toBBoxString().split(","));
     });
   }, [map]);
 
@@ -26,7 +29,14 @@ function LocationMarker() {
   );
 }
 
-export default () => {
+const onHandleFeaturePopup = (feature = {}, layer) => {
+  const { properties = {} } = feature;
+  const { Name } = properties;
+  if (!Name) return;
+  layer.bindPopup(`<p>${Name}</p>`);
+}
+
+const Map = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -35,16 +45,18 @@ export default () => {
       console.log(json);
       setData(json);
     });
-  });
+  }, []);
 
   return (
-    <MapContainer center={position} zoom={13} style={{height: '100vh', width: '100%'}}>
+    <MapContainer center={position} zoom={6} style={{ height: '100vh', width: '100%' }}>
       <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {data && <GeoJSON key='my-geojson' data={data} />}
+      {data && <GeoJSON key='my-geojson' data={data} onEachFeature={onHandleFeaturePopup} />}
       <LocationMarker />
     </MapContainer>
   )
 }
+
+export default Map;

@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
+import MenuItem from '@mui/material/MenuItem';
 import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -17,11 +17,6 @@ import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const LanguageLink = (props) => (
   <Button href={props.to} size="small">
@@ -42,23 +37,15 @@ const Link = (props) => (
   </Button>
 )
 
-export default () => {
+const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -131,8 +118,8 @@ export default () => {
           >
             dopomoha.pl
           </Typography>
-          <Box sx={{flexGrow: 1 }} />
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <LanguageLink to="ua" label="ua" icon={uaFlag} />
             <LanguageLink to="pl" label="pl" icon={plFlag} />
             <LanguageLink to="en" label="en" icon={enFlag} />
@@ -146,26 +133,4 @@ export default () => {
   );
 };
 
-// export default () => (
-//   <AppBar position="static">
-//     <Container maxWidth="xl">
-//       <Toolbar disableGutters>
-//         <Typography
-//           variant="h6"
-//           component="div"
-//           sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-//         >
-//           dopomoha.pl
-//         </Typography>
-//         <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
-          // <LanguageLink to="/ua" label="ua" icon={uaFlag} />
-          // <LanguageLink to="/pl" label="pl" icon={plFlag} />
-          // <LanguageLink to="/en" label="en" icon={enFlag} />
-          // <Link to="mailto:kontakt@dopomoha.pl" label="contact" icon={<EmailIcon />} />
-          // <Link to="https://www.gov.pl/web/udsc/ukraina" label="ua.gov.pl" icon={<InfoIcon />} />
-          // <Link to="https://github.com/openstreetmap-polska/ua-2022-map" label="" icon={<GitHubIcon />} />
-//         </Box>
-//       </Toolbar>
-//     </Container>
-//   </AppBar>
-// )
+export default Header;
