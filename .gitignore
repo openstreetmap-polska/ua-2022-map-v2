@@ -33,6 +33,9 @@ psd
 thumb
 sketch
 
+### PhpStorm ###
+.idea/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
