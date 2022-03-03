@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap, LayersControl, CircleMarker } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from "leaflet";
 
 const position = [51.505, -0.09];
@@ -25,7 +26,11 @@ function LocationMarker() {
   }, [map]);
 
   return position === null ? null : (
-    <Marker position={position} />
+    <CircleMarker
+      center={position}
+      pathOptions={{ color: 'red' }}
+      radius={10}>
+    </CircleMarker>
   );
 }
 
@@ -35,6 +40,12 @@ const onHandleFeaturePopup = (feature = {}, layer) => {
   if (!Name) return;
   layer.bindPopup(`<p>${Name}</p>`);
 }
+
+var markers = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false
+});
 
 const Map = () => {
   const [data, setData] = useState(null);
@@ -49,12 +60,20 @@ const Map = () => {
 
   return (
     <MapContainer center={position} zoom={6} style={{ height: '100vh', width: '100%' }}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {data && <GeoJSON key='my-geojson' data={data} onEachFeature={onHandleFeaturePopup} />}
-      <LocationMarker />
+      <LayersControl position="topright">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        <LayersControl.Overlay checked name="Layer group with circles">
+          {/* <MarkerClusterGroup> */}
+          {data && <GeoJSON key='my-geojson' data={data} onEachFeature={onHandleFeaturePopup} />}
+          {/* </MarkerClusterGroup> */}
+        </LayersControl.Overlay>
+
+        <LocationMarker />
+      </LayersControl>
     </MapContainer>
   )
 }
