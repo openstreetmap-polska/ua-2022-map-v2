@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, GeoJSON, useMap, LayersControl, CircleMarker }
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from "leaflet";
 
+import MarkerComponent from './Marker'
+
 const position = [51.505, -0.09];
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -34,19 +36,6 @@ function LocationMarker() {
   );
 }
 
-const onHandleFeaturePopup = (feature = {}, layer) => {
-  const { properties = {} } = feature;
-  const { Name } = properties;
-  if (!Name) return;
-  layer.bindPopup(`<p>${Name}</p>`);
-}
-
-var markers = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,
-  showCoverageOnHover: false,
-  zoomToBoundsOnClick: false
-});
-
 const Map = () => {
   const [data, setData] = useState(null);
 
@@ -66,10 +55,19 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <LayersControl.Overlay checked name="Layer group with circles">
-          {/* <MarkerClusterGroup> */}
-          {data && <GeoJSON key='my-geojson' data={data} onEachFeature={onHandleFeaturePopup} />}
-          {/* </MarkerClusterGroup> */}
+        <LayersControl.Overlay checked name="Warstwa 1">
+          <MarkerClusterGroup>
+            {data && data.features.map((feature, index) => {
+              const props = {
+                coords: feature.geometry.coordinates.flat(),
+                index,
+                title: feature.properties.Name,
+                phone: feature.properties.phone,
+                desc: feature.properties.description
+              }
+              return <MarkerComponent {...props} key={index} />
+            })}
+          </MarkerClusterGroup>
         </LayersControl.Overlay>
 
         <LocationMarker />
