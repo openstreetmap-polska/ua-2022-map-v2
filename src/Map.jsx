@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap, Marker, LayersControl } from 'react-leaflet';
 import L from "leaflet";
 
 const position = [51.505, -0.09];
@@ -49,18 +49,20 @@ const Map = () => {
 
   return (
     <MapContainer center={position} zoom={6} style={{ height: '100vh', width: '100%' }}>
-      <LayersControl.BaseLayer name="OSM Carto - international">
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxNativeZoom={19}
-        />
-      </LayersControl.BaseLayer>
-      <LayersControl.BaseLayer checked name="OSM Carto - in ukrainian">
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://dopomoha.pl/hot/{z}/{x}/{y}.png" maxNativeZoom={19}
-        />
-      </LayersControl.BaseLayer>
+      <LayersControl collapsed={false}>
+        <LayersControl.BaseLayer name="OSM Carto - international">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxNativeZoom={19}
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.BaseLayer checked name="OSM Carto - in ukrainian">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://dopomoha.pl/hot/{z}/{x}/{y}.png" maxNativeZoom={19}
+          />
+        </LayersControl.BaseLayer>
+      </LayersControl>
       {data && <GeoJSON key='my-geojson' data={data} onEachFeature={onHandleFeaturePopup} />}
       <LocationMarker />
     </MapContainer>
