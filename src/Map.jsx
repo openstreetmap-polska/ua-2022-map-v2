@@ -49,10 +49,18 @@ const Map = () => {
 
   return (
     <MapContainer center={position} zoom={6} style={{ height: '100vh', width: '100%' }}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <LayersControl.BaseLayer name="OSM Carto - international">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxNativeZoom={19}
+        />
+      </LayersControl.BaseLayer>
+      <LayersControl.BaseLayer checked name="OSM Carto - in ukrainian">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://dopomoha.pl/hot/{z}/{x}/{y}.png" maxNativeZoom={19}
+        />
+      </LayersControl.BaseLayer>
       {data && <GeoJSON key='my-geojson' data={data} onEachFeature={onHandleFeaturePopup} />}
       <LocationMarker />
     </MapContainer>
