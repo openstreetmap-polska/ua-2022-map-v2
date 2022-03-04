@@ -49,11 +49,19 @@ const Map = () => {
 
   return (
     <MapContainer center={position} zoom={6} style={{ height: '100vh', width: '100%' }}>
-      <LayersControl position="topright">
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      <LayersControl position="topright" collapsed={false}>
+        <LayersControl.BaseLayer name="OSM Carto - international">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxNativeZoom={19}
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.BaseLayer checked name="OSM Carto - in ukrainian">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://dopomoha.pl/hot/{z}/{x}/{y}.png" maxNativeZoom={19}
+          />
+        </LayersControl.BaseLayer>
 
         <LayersControl.Overlay checked name="Warstwa 1">
           <MarkerClusterGroup>
