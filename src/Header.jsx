@@ -1,3 +1,6 @@
+import * as React from 'react';
+import { useTranslation } from "react-i18next";
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,23 +11,25 @@ import MenuItem from '@mui/material/MenuItem';
 import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 
 import enFlag from './img/flags/gb.png';
 import plFlag from './img/flags/pl.png';
 import uaFlag from './img/flags/ua.png';
 
-import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Link as LinkRouter, useParams } from "react-router-dom";
+import { useEffect } from 'react';
+import { LANGUAGE } from './utils/consts';
 
-const LanguageLink = (props) => (
-  <Button href={props.to} size="small">
-    <Avatar src={props.icon} style={{
+const LanguageLink = ({ to, icon }) => (
+  <LinkRouter to={to}>
+    <Avatar src={icon} style={{
       width: 30,
       height: 30,
     }} />
-  </Button>
+  </LinkRouter>
 );
 
 const Link = (props) => (
@@ -37,8 +42,39 @@ const Link = (props) => (
   </Button>
 )
 
+const Title = ({ t }) =>
+  <React.Suspense fallback=''>
+    <Typography>{ t('title') }</Typography>
+  </React.Suspense>
+
 const Header = () => {
+  const { t, i18n } = useTranslation(['common']);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  let { lang } = useParams();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
+  useEffect(()=> {
+      switch(lang) {
+        case LANGUAGE.EN:
+          changeLanguage(LANGUAGE.EN)
+          break;
+        case LANGUAGE.PL:
+          changeLanguage(LANGUAGE.PL)
+          break;
+        case LANGUAGE.RU:
+          changeLanguage(LANGUAGE.RU)
+          break;
+        case LANGUAGE.UA:
+          changeLanguage(LANGUAGE.UA)
+          break;
+        default: changeLanguage(LANGUAGE.UA)
+          break;
+      }
+  }, [lang])
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -60,7 +96,7 @@ const Header = () => {
           >
             dopomoha.pl
           </Typography>
-
+          <Title t={t} />
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -91,16 +127,16 @@ const Header = () => {
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
-                <LanguageLink to="/ua" label="ua" icon={uaFlag} />
+                <LanguageLink to={LANGUAGE.UA} label={LANGUAGE.UA} icon={uaFlag} />
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
-                <LanguageLink to="/pl" label="pl" icon={plFlag} />
+                <LanguageLink to={LANGUAGE.PL} label={LANGUAGE.PL} icon={plFlag} />
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
-                <LanguageLink to="/en" label="en" icon={enFlag} />
+                <LanguageLink to={LANGUAGE.EN} label={LANGUAGE.EN} icon={enFlag} />
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link to="mailto:kontakt@dopomoha.pl" label="contact" icon={<EmailIcon />} />
+                <Link to="mailto:kontakt@dopomoha.pl" label={t('contact')} icon={<EmailIcon />} />
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Link to="https://www.gov.pl/web/udsc/ukraina" label="ua.gov.pl" icon={<InfoIcon />} />
@@ -119,11 +155,13 @@ const Header = () => {
             dopomoha.pl
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
-            <LanguageLink to="ua" label="ua" icon={uaFlag} />
-            <LanguageLink to="pl" label="pl" icon={plFlag} />
-            <LanguageLink to="en" label="en" icon={enFlag} />
-            <Link to="mailto:kontakt@dopomoha.pl" label="contact" icon={<EmailIcon />} />
+          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            <Box style={{ display:'flex', justifyContent:'space-evenly', minWidth: '200px' }}>
+              <LanguageLink to={LANGUAGE.UA} label={LANGUAGE.UA} icon={uaFlag} />
+              <LanguageLink to={LANGUAGE.PL} label={LANGUAGE.PL} icon={plFlag} />
+              <LanguageLink to={LANGUAGE.EN} label={LANGUAGE.EN} icon={enFlag} />
+            </Box>
+            <Link to="mailto:kontakt@dopomoha.pl" label={t('contact')} icon={<EmailIcon />} />
             <Link to="https://www.gov.pl/web/udsc/ukraina" label="ua.gov.pl" icon={<InfoIcon />} />
             <Link to="https://github.com/openstreetmap-polska/ua-2022-map" label="" icon={<GitHubIcon />} />
           </Box>
